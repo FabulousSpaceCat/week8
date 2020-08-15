@@ -1,0 +1,70 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="rps9.js" defer></script>
+    <title>Rock Paper Scissors+</title>
+</head>
+<body class="w3-black">
+
+<header>
+    <div id="topbar" class="w3-cell-row">
+        <div class="w3-cell">
+            <img src="logo.png" alt="RPS+ logo">
+        </div>
+        <div class="w3-cell w3-bar">
+            <a href="home" class="w3-bar-item">home</a>
+            <a href="movelist" class="w3-bar-item">rules</a>
+            <a href="leaderboard" class="w3-bar-item">leaderboard</a>
+        </div>
+        <div class="w3-cell w3-right w3-bar-block">
+            <div class="w3-bar-item"><%= user =></div>
+            <div class="w3-bar-item">Win/Loss<br><%= win =>/<%= lose =><div>
+            <a class="w3-bar-item" href="home">Change Player</a>
+        </div>
+    </div>
+</header>
+
+<main>
+<h1 class="">Choose your weapon</h1>
+<form method="POST" action="/battle">
+    <ul id="choose">
+        <li><input type="radio" id="rd0" name="weapon" value="0">
+            <label for="rd0"><img src="http://lorempixel.com/100/100"></label>
+        </li>
+        <li><input type="radio" id="rd1" name="weapon" value="1">
+            <label for="rd1"><img src="http://lorempixel.com/101/101"></label>
+        </li>
+        <li><input type="radio" id="rd2" name="weapon" value="2">
+            <label for="rd2"><img src="http://lorempixel.com/102/102"></label>
+        </li>
+        <li><input type="radio" id="rd3" name="weapon" value="3">
+            <label for="rd3"><img src="http://lorempixel.com/103/103"></label>
+        </li>
+        <li><input type="radio" id="rd4" name="weapon" value ="4">
+            <label for="rd4"><img src="http://lorempixel.com/104/104"></label>
+        </li>
+        <li><input type="radio" id="rd5" name="weapon" value="5">
+            <label for="rd5"><img src="http://lorempixel.com/105/105"></label>
+        </li>
+        <li><input type="radio" id="rd6" name="weapon" value="6">
+            <label for="rd6"><img src="http://lorempixel.com/106/106"></label>
+        </li>
+        <li><input type="radio" id="rd7" name="weapon" value="7">
+            <label for="rd7"><img src="http://lorempixel.com/107/107"></label>
+        </li>
+        <li><input type="radio" id="rd8" name="weapon" value="8">
+            <label for="rd8"><img src="http://lorempixel.com/108/108"></label>
+        </li>
+        <li><input type="radio" id="rd9" name="weapon" value="9">
+            <label for="rd9"><img src="http://lorempixel.com/109/109"></label>
+        </li>
+    </ul>
+</form>
+</main>
+
+<footer>
+
+</footer>
+</body>
