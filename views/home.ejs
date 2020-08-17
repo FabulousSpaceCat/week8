@@ -1,0 +1,39 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <title>Rock Paper Scissors+</title>
+</head>
+<body>
+
+<header>
+    <div id="topbar" class="w3-cell-row">
+        <div class="w3-cell">
+            <img src="logo.png" alt="RPS+ logo">
+        </div>
+        <div class="w3-cell w3-bar">
+            <a href="home" class="w3-bar-item">home</a>
+            <a href="movelist" class="w3-bar-item">rules</a>
+            <a href="leaderboard" class="w3-bar-item">leaderboard</a>
+        </div>
+        <div class="w3-cell w3-right w3-bar-block">
+            <p class="w3-bar-item"><%= count %> people have played!</p>
+        </div>
+</header>
+
+<main>
+<div id="welcome">
+    <h1>Rock Paper Scissors+</h1>
+    <p>Welcome to a very silly game of Rock Paper Scissors+!  There are ten options to choose from, but don't worry, the rules are still simple.  You can view a chart of moves <a href="movelist#chart">here</a>, or a written list <a href="movelist#table">here</a>.</p>
+</div>
+<div id="form">
+    <form method="POST" action="/play">
+        <label for="user"><h3>Now, who's playing today?</h3>
+        <p><input name="user" id="user" type="text" maxlength="20"></p></label>
+        <p><button name="Submit" type="submit" value="Submit">Let's go!</button></p>
+    </form>
+</div>
+</main>
+
+</body>
