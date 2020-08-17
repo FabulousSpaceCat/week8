@@ -20,14 +20,14 @@
         <div class="w3-cell w3-right w3-bar-block">
             <div class="w3-bar-item"><%= user %></div>
             <div class="w3-bar-item">Win/Loss<br><%= win %>/<%= lose %><div>
-            <a class="w3-bar-item" href="home">Change Player</a>
+            <a class="w3-bar-item" href="/">Change Player</a>
         </div>
     </div>
 </header>
 
 <main>
 <h1 class="">Choose your weapon</h1>
-<form method="POST" action="/battle">
+<form method="POST" action="/fight">
     <ul id="choose">
         <li><input type="radio" id="rd0" name="weapon" value="0" onclick="this.form.submit()">
             <label for="rd0"><img src="http://lorempixel.com/100/100"></label>

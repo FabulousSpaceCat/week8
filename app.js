@@ -3,8 +3,15 @@ var mysql = require('mysql');
 var bodyParser  = require("body-parser");
 var app = express();
 
-var user = ""
-var weapons = [ { Name: "Rock", Damage: [ "ties with", 
+let user = "";
+let p1 = "";
+let win = "";
+let lose = "";
+let left = "";
+let middle = "";
+let right = "";
+let message = "";
+let weapons = [ { Name: "Rock", Damage: [ "ties with", 
                                         "breaks",
                                         "is caught up by", 
                                         "is immune to", 
@@ -119,58 +126,52 @@ var connection = mysql.createConnection({
 app.get("/", function(req, res){
     // How many people have played?
     let c = "SELECT COUNT(*) AS count FROM users";
-    let count = "";
     // Get count
     connection.query(c, function(err, results){
         if(err) throw err;
-        count = results[0].count; 
+        let count = results[0].count; 
+        // Build the page
+        res.render("home", {count: count});
     });
-    // Build the page
-    res.render("home", {count: count});
 });
 
 app.post("/play", function(req, res){
     // Who's playing?
     user = req.body.user.trim();
-    // Add/Get user
+    // Add user if they don't exist
     let u = `INSERT IGNORE INTO users (user_name) VALUES ("${user}")`;
+    connection.query(u, function(err, results){
+        if(err) throw err; 
+    });
+    res.redirect("/choose");
+});
+
+app.get("/choose", function(req, res){
     // Find wins from particular user
     let w = `SELECT win FROM users WHERE user_name = "${user}"`;
     // Find losses from particular user
     let l = `SELECT lose FROM users WHERE user_name = "${user}"`;
-    // Initialize variables
-    let win = "";
-    let lose = "";
-    // Add user if they don't exist
-    connection.query(u, function(err, results){
-        if(err) throw err; 
-    });
     // Get wins
     connection.query(w, function(err, results){
         if(err) throw err;
         win = results[0].win; 
+        // Get losses
+        connection.query(l, function(err, results){
+            if(err) throw err;
+            lose = results[0].lose; 
+            // Build the page
+            res.render("choose", {user: user, win: win, lose: lose});
+        });
     });
-    // Get losses
-    connection.query(l, function(err, results){
-        if(err) throw err;
-        lose = results[0].lose; 
-    });
-    // Build the page
-    res.render("play", {user: user, win: win, lose: lose});
 });
 
-app.post("/battle", function(req, res){
-    // Who's playing?
-    user = req.body.userName;
-    // Initialize some variables - there's probably a better way to be doing this
-    let win = "";
-    let lose = "";
-    let left = "";
-    let middle = "";
-    let right = "";
-    let message = "";
+app.post("/fight", function(req, res){
     // Get the user's weapon
-    let p1 = req.body.weapon;
+    p1 = req.body.weapon;
+    res.redirect("/battle");
+});
+
+app.get("/battle", function(req, res){
     // Get the computer's weapon
     let p2 = Math.round(Math.random() * 10);
     let random = Math.round(Math.random() * 10);
@@ -187,16 +188,24 @@ app.post("/battle", function(req, res){
     else if (p1 === 9 && p1 != p2 && random <5 || p2 === 9 && p1 != p2 && random < 5) {
         middle = weapons[p1].Damage[p2];
         message = "You lose!";
-        let w = `UPDATE users SET lose = lose + 1 WHERE user = "${user}"`;
-        connection.query(w, function(err, results){
+        let ul = `UPDATE users SET lose = lose + 1 WHERE user_name = "${user}"`;
+        connection.query(ul, function(err, results){
             if(err) throw err;
-            win = results[0].win; 
+        });
+        let l = `SELECT lose FROM users WHERE user_name = "${user}"`;
+        connection.query(l, function(err, results){
+            if(err) throw err;
+            lose = results[0].lose; 
         });
     }
     else if (p1 === 9 && p1 != p2 && random >= 5 || p2 === 9 && p1 != p2 && random >= 5) {
         middle = weapons[p1].Damage[p2];
         message = "You win!";
-        let w = `UPDATE users SET win = win + 1 WHERE user = "${user}"`;
+        let uw = `UPDATE users SET win = win + 1 WHERE user_name = "${user}"`;
+        connection.query(uw, function(err, results){
+            if(err) throw err;
+        });
+        let w = `SELECT win FROM users WHERE user_name = "${user}"`;
         connection.query(w, function(err, results){
             if(err) throw err;
             win = results[0].win; 
@@ -215,7 +224,11 @@ app.post("/battle", function(req, res){
         middle = weapons[p1].Damage[p2];
         right = weapons[p2].Name;
         message = "You win!"
-        let w = `UPDATE users SET win = win + 1 WHERE user = "${user}"`;
+        let uw = `UPDATE users SET win = win + 1 WHERE user_name = "${user}"`;
+        connection.query(uw, function(err, results){
+            if(err) throw err;
+        });
+        let w = `SELECT win FROM users WHERE user_name = "${user}"`;
         connection.query(w, function(err, results){
             if(err) throw err;
             win = results[0].win; 
@@ -227,10 +240,14 @@ app.post("/battle", function(req, res){
         middle = weapons[p1].Damage[p2];
         right = weapons[p2].Name;
         message = "You lose."
-        let w = `UPDATE users SET lose = lose + 1 WHERE user = "${user}"`;
-        connection.query(w, function(err, results){
+        let ul = `UPDATE users SET lose = lose + 1 WHERE user_name = "${user}"`;
+        connection.query(ul, function(err, results){
             if(err) throw err;
-            win = results[0].win; 
+        });
+        let l = `SELECT lose FROM users WHERE user_name = "${user}"`;
+        connection.query(l, function(err, results){
+            if(err) throw err;
+            lose = results[0].lose; 
         });
     }
     // Build the page
