@@ -1,0 +1,43 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <title>Rock Paper Scissors+</title>
+</head>
+<body>
+
+<header>
+    <div id="topbar" class="w3-cell-row">
+        <div class="w3-cell">
+            <img src="logo.png" alt="RPS+ logo">
+        </div>
+        <div id="nav" class="w3-cell w3-bar">
+            <a href="home" class="w3-bar-item">home</a>
+            <a href="movelist" class="w3-bar-item">rules</a>
+            <a href="leaderboard" class="w3-bar-item">leaderboard</a>
+        </div>
+        <div class="w3-cell w3-right w3-bar-block">
+            <div class="w3-bar-item"><%= user %></div>
+            <div class="w3-bar-item">Win/Loss<br><%= win %>/<%= lose %><div>
+            <a class="w3-bar-item" href="/">Change Player</a>
+        </div>
+    </div>
+</header>
+
+<main class="w3-center">
+    <h1>Battle!</h1>
+    <ul class="w3-cell-row">
+        <li class="w3-cell"><img src="images/<%= p1 %>.png" alt="<%= left %>"><%= left %></li>
+        <li class="w3-cell"><%= middle %></li>
+        <li class="w3-cell"><%= right %><img src="images/<%= p2 %>.png" alt="<%= right %>"></li>
+    </ul>
+    <h3><%= message %></h3>
+    <br><button onclick="location.href='choose';">Play again?</button>
+    </div>
+</main>
+
+<footer>
+
+</footer>
+</body>

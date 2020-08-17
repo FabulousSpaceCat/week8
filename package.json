@@ -1,0 +1,33 @@
+{
+  "name": "week8",
+  "version": "1.0.0",
+  "description": "Rock Paper Scissors but Extra",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "node": "^14.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FabulousSpaceCat/week8.git"
+  },
+  "keywords": [
+    "rock",
+    "paper",
+    "scissors",
+    "rps-9"
+  ],
+  "author": "Christina Deming",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FabulousSpaceCat/week8/issues"
+  },
+  "homepage": "https://github.com/FabulousSpaceCat/week8#readme"
+}
