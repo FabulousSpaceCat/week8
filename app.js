@@ -11,6 +11,8 @@ let left = "";
 let middle = "";
 let right = "";
 let message = "";
+let update = "UPDATE users SET ?? = ?? + 1 WHERE user_name = ?"
+let select = "SELECT ?? FROM users WHERE user_name = ?"
 let weapons = [ { Name: "Rock", Damage: [ "ties with", 
                                         "breaks",
                                         "is caught up by", 
@@ -22,7 +24,7 @@ let weapons = [ { Name: "Rock", Damage: [ "ties with",
                                         "is covered by",
                                         "Trout smack!" ] }, 
                     { Name: "Scissors", Damage: [ "are broken by", 
-                                                "tie with",
+                                                "ties with",
                                                 "cut",
                                                 "can't cut",
                                                 "slice",
@@ -139,28 +141,31 @@ app.post("/play", function(req, res){
     // Who's playing?
     user = req.body.user.trim();
     // Add user if they don't exist
-    let u = `INSERT IGNORE INTO users (user_name) VALUES ("${user}")`;
-    connection.query(u, function(err, results){
+    let u = "INSERT IGNORE INTO users (user_name) VALUES (?)";
+    connection.query(u, user, (err, results) => {
         if(err) throw err; 
     });
     res.redirect("/choose");
 });
 
 app.get("/choose", function(req, res){
-    // Find wins from particular user
-    let w = `SELECT win FROM users WHERE user_name = "${user}"`;
-    // Find losses from particular user
-    let l = `SELECT lose FROM users WHERE user_name = "${user}"`;
+    // Clear variables just in case
+    p1 = "";
+    p2 = "";
+    left = "";
+    middle = "";
+    right = "";
+    message = "";
     // Get wins
-    connection.query(w, function(err, results){
+    connection.query(select, ["win", user], (err, results) => {
         if(err) throw err;
         win = results[0].win; 
         // Get losses
-        connection.query(l, function(err, results){
+        connection.query(select, ["lose", user], (err, results) => {
             if(err) throw err;
             lose = results[0].lose; 
             // Build the page
-            res.render("choose", {user: user, win: win, lose: lose});
+            res.render("choose", {user, win, lose});
         });
     });
 });
@@ -176,39 +181,46 @@ app.get("/battle", function(req, res){
     let p2 = Math.round(Math.random() * 10);
     let random = Math.round(Math.random() * 10);
     // Fight!
-    let battle = (9 + p1 - p2) % 9;
+    let battle = (9 + p2 - p1) % 9;
     // Special trout rules
     // Trout marriage
     if (p1 === 9 && p2 === p1) {
         left = weapons[p1].Name;
         middle = weapons[p1].Damage[p2];
         right = weapons[p2].Name;
+        // Build the page
+        res.render("battle", { user, win, lose, left, middle, right, message, p1, p2 });
+
     }
     // Trout smack (50/50)
     else if (p1 === 9 && p1 != p2 && random <5 || p2 === 9 && p1 != p2 && random < 5) {
         middle = weapons[p1].Damage[p2];
         message = "You lose!";
-        let ul = `UPDATE users SET lose = lose + 1 WHERE user_name = "${user}"`;
-        connection.query(ul, function(err, results){
+        // Update score
+        connection.query(update, ["lose", "lose", user], (err, results) => {
             if(err) throw err;
-        });
-        let l = `SELECT lose FROM users WHERE user_name = "${user}"`;
-        connection.query(l, function(err, results){
-            if(err) throw err;
-            lose = results[0].lose; 
+            // Get score
+            connection.query(select, ["lose", user], (err, results) => {
+                if(err) throw err;
+                lose = results[0].lose; 
+                // Build the page
+                res.render("battle", { user, win, lose, left, middle, right, message, p1, p2 });
+            });
         });
     }
     else if (p1 === 9 && p1 != p2 && random >= 5 || p2 === 9 && p1 != p2 && random >= 5) {
         middle = weapons[p1].Damage[p2];
         message = "You win!";
-        let uw = `UPDATE users SET win = win + 1 WHERE user_name = "${user}"`;
-        connection.query(uw, function(err, results){
+        // Update score
+        connection.query(update, ["win", "win", user], (err, results) => {
             if(err) throw err;
-        });
-        let w = `SELECT win FROM users WHERE user_name = "${user}"`;
-        connection.query(w, function(err, results){
-            if(err) throw err;
-            win = results[0].win; 
+            // Get score
+            connection.query(select, ["win", user], (err, results) => {
+                if(err) throw err;
+                win = results[0].win; 
+                // Build the page
+                res.render("battle", { user, win, lose, left, middle, right, message, p1, p2 });
+            });
         });
     }
     // Regular rules
@@ -217,6 +229,8 @@ app.get("/battle", function(req, res){
         left = weapons[p1].Name;
         middle = weapons[p1].Damage[p2];
         right = weapons[p2].Name;
+         // Build the page
+        res.render("battle", { user, win, lose, left, middle, right, message, p1, p2 });
     }
     else if (p1 !=9 && p2 !=9 && battle != 0 && battle % 2 === 1){
         // P1 wins
@@ -224,14 +238,16 @@ app.get("/battle", function(req, res){
         middle = weapons[p1].Damage[p2];
         right = weapons[p2].Name;
         message = "You win!"
-        let uw = `UPDATE users SET win = win + 1 WHERE user_name = "${user}"`;
-        connection.query(uw, function(err, results){
+        // Update score
+        connection.query(update, ["win", "win", user], (err, results) => {
             if(err) throw err;
-        });
-        let w = `SELECT win FROM users WHERE user_name = "${user}"`;
-        connection.query(w, function(err, results){
-            if(err) throw err;
-            win = results[0].win; 
+            // Get score
+            connection.query(select, ["win", user], function(err, results){
+                if(err) throw err;
+                win = results[0].win; 
+                // Build the page
+                res.render("battle", { user, win, lose, left, middle, right, message, p1, p2 });
+            });
         });
     }
     else if (p1 !=9 && p2 !=9 && battle != 0 && battle % 2 === 0) {
@@ -240,27 +256,18 @@ app.get("/battle", function(req, res){
         middle = weapons[p1].Damage[p2];
         right = weapons[p2].Name;
         message = "You lose."
-        let ul = `UPDATE users SET lose = lose + 1 WHERE user_name = "${user}"`;
-        connection.query(ul, function(err, results){
+        //Update score
+        connection.query(update, ["lose", "lose", user], (err, results) => {
             if(err) throw err;
-        });
-        let l = `SELECT lose FROM users WHERE user_name = "${user}"`;
-        connection.query(l, function(err, results){
-            if(err) throw err;
-            lose = results[0].lose; 
+            //Get score
+            connection.query(select, ["lose", user], function(err, results){
+                if(err) throw err;
+                lose = results[0].lose; 
+                // Build the page
+                res.render("battle", { user, win, lose, left, middle, right, message, p1, p2 });
+            });
         });
     }
-    // Build the page
-    res.render("battle", { user: user, 
-                        win: win, 
-                        lose: lose, 
-                        left: left, 
-                        middle: middle, 
-                        right: right, 
-                        message: message,
-                        p1: p1,
-                        p2: p2 
-    });
 });
 
 app.listen(6969, function(){
